@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Usuarios{% endblock %}
+{% block header_title %}Usuarios{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/usuarios.css' %}">
+
+<section class="header-section">
+    <div class="header-text">
+        <h1>Gestión de Usuarios</h1>
+        <p>Administra los usuarios y permisos</p>
+    </div>
+
+    <!-- Abrir modal crear -->
+    <label for="modal-crear-usuario" class="btn-primary">
+        <i data-lucide="user-plus"></i> Nuevo Usuario
+    </label>
+</section>
+
+<section class="filters-section">
+    <form method="GET" class="filters-form">
+        <div class="search-input">
+            <i data-lucide="search"></i>
+            <input type="text" name="search" placeholder="Buscar usuario..." value="{{ query.search }}">
+        </div>
+
+        <select name="rol" class="filter-select">
+            <option value="">Roles</option>
+            <option value="administrador" {% if query.rol == "administrador" %}selected{% endif %}>Administrador</option>
+            <option value="auxiliar" {% if query.rol == "auxiliar" %}selected{% endif %}>Auxiliar</option>
+        </select>
+
+        <select name="estado" class="filter-select">
+            <option value="">Tipo</option>
+            {% if request.user.rol == "administrador" and usuarios|length == 1 %}
+            <option value="activo" {% if query.estado == 'activo' %}selected{% endif %}>Activo</option>
+            <option value="inactivo" {% if query.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+            <option value="inactivo" disabled>No disponible</option>
+            {% else %}
+            <option value="activo" {% if query.estado == 'activo' %}selected{% endif %}>Activo</option>
+            <option value="inactivo" {% if query.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+            {% endif %}
+        </select>
+    </form>
+</section>
+
+<section class="users-table">
+    <table>
+        <thead>
+            <tr>
+                <th>USUARIO</th>
+                <th>CORREO</th>
+                <th>ROL</th>
+                <th>ESTADO</th>
+                <th>CREADO</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td class="user-cell">
+                    {% if u.foto %}
+                    <img src="{{ u.foto.url }}" alt="{{ u.nombre }}">
+                    {% else %}
+                    <i data-lucide="user-circle" class="avatar-icon"></i>
+                    {% endif %}
+                    <div class="user-info">
+                        <div class="name">{{ u.nombre }}</div>
+                    </div>
+                </td>
+
+                <td>{{ u.email }}</td>
+                <td>{{ u.get_rol_display }}</td>
+
+                <td>
+                    {% if u.estado == 'activo' %}
+                    <span class="status active">Activo</span>
+                    {% else %}
+                    <span class="status inactive">Inactivo</span>
+                    {% endif %}
+                </td>
+
+                <td>{{ u.fecha_creacion|date:"d/m/Y" }}</td>
+
+                <td class="actions">
+                    <label for="modal-editar-{{ u.id }}" class="btn-edit" title="Editar">
+                        <i data-lucide="edit-2"></i>
+                    </label>
+
+                    <label for="modal-reset-{{ u.id }}" class="btn-reset" title="Reset contraseña">
+                        <i data-lucide="key"></i>
+                    </label>
+
+                    {% if u.estado == 'activo' %}
+                    <form action="{% url 'invenzo:desactivar_usuario' u.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="btn-deactivate" title="Desactivar"
+                            style="border:none;background:none;cursor:pointer;">
+                            <i data-lucide="user-x"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <form action="{% url 'invenzo:activar_usuario' u.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="btn-activate" title="Activar"
+                            style="border:none;background:none;cursor:pointer;">
+                            <i data-lucide="user-check"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="empty">No hay usuarios registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% include 'modals/usuario/modal_crear_usuario.html' %}
+{% include 'modals/usuario/modal_editar_usuario.html' %}
+{% include 'modals/usuario/modal_reset_usuario.html' %}
+
+<script>lucide.createIcons()</script>
+
+{% endblock %}

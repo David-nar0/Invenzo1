@@ -1,0 +1,76 @@
+<div class="modal-container">
+    <input type="checkbox" id="modal-agregar-producto" class="modal-toggle">
+
+    <div class="modal-backdrop">
+        <div class="modal-window-custom">
+
+            <label for="modal-agregar-producto" class="modal-close-custom">✕</label>
+
+            <h2 class="modal-title-custom">Agregar Producto</h2>
+
+            <form method="POST" action="{% url 'invenzo:agregar_producto' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="modal-grid-custom">
+
+                    <div class="field-group-custom">
+                        {{ form.nombre.label_tag }}
+                        {{ form.nombre }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.codigo.label_tag }}
+                        {{ form.codigo }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.categoria.label_tag }}
+                        {{ form.categoria }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.precio.label_tag }}
+                        {{ form.precio }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.cantidad.label_tag }}
+                        {{ form.cantidad }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.stock_minimo.label_tag }}
+                        {{ form.stock_minimo }}
+                    </div>
+
+                    <div class="field-group-custom">
+                        {{ form.stock_maximo.label_tag }}
+                        {{ form.stock_maximo }}
+                    </div>                    
+
+                    <div class="field-group-custom full-custom">
+                        {{ form.descripcion.label_tag }}
+                        {{ form.descripcion }}
+                    </div>
+
+                    <!-- Campo de imagen con botón visible -->
+                    <div class="field-group-custom full-custom">
+                        <label for="id_imagen">Seleccionar imagen</label>
+                        {{ form.imagen }}
+                        <div class="image-preview-custom">
+                            <img id="preview-imagen" src="#" alt="Previsualización" style="display:none;">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-actions-custom">
+                    <label for="modal-agregar-producto" class="modal-btn-secondary">Cancelar</label>
+                    <button type="submit" class="modal-btn-primary">Guardar</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

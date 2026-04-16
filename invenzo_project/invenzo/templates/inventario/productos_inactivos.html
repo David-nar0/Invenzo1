@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Productos Inactivos{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<section class="section">
+    <h2>Productos Inactivos</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>PRODUCTO</th>
+                <th>CÓDIGO</th>
+                <th>CATEGORÍA</th>
+                <th>PRECIO</th>
+                <th>STOCK</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr class="inactive-row">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio|floatformat:2 }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>
+                    <a href="{% url 'invenzo:activar_producto' producto.id %}" class="btn btn-primary">Activar</a>
+
+                    <a href="{% url 'invenzo:eliminar_definitivo' producto.id %}" class="btn btn-secondary"
+                       onclick="return confirm('¿Eliminar DEFINITIVAMENTE este producto?')">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">No hay productos inactivos.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categorías{% endblock %}
+{% block header_title %}Gestión de Categorías{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/categorias.css' %}">
+
+<!-- ========== ENCABEZADO ========== -->
+<section class="header-section">
+    <div class="header-text">
+        <h1>Gestión de Categorías</h1>
+        <p>Administra las categorías de tus productos</p>
+    </div>
+
+    <!-- BOTÓN ABRIR MODAL DE NUEVA CATEGORÍA -->
+    <label for="modal-nueva" class="btn-primary">
+        <i data-lucide="plus"></i> Nueva Categoría
+    </label>
+</section>
+
+
+<!-- ========== BÚSQUEDA Y FILTROS ========== -->
+<section class="filters-section">
+    <form method="GET">
+        <div class="search-input">
+            <i data-lucide="search"></i>
+            <input 
+                type="text" 
+                placeholder="Buscar categorías..." 
+                name="search" 
+                value="{{ request.GET.search }}">
+        </div>
+
+        <div class="action-buttons">
+            <a 
+                href="{% url 'invenzo:exportar_categorias' %}?search={{ request.GET.search }}" 
+                class="btn-secondary export-btn">
+                <i data-lucide="file-text"></i> Exportar
+            </a>
+        </div>
+    </form>
+</section>
+
+
+
+<!-- ========== TABLA DE CATEGORÍAS ========== -->
+<section class="categories-table">
+    <table>
+        <thead>
+            <tr>
+                <th>NOMBRE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>PRODUCTOS</th>
+                <th>FECHA CREACIÓN</th>
+                <th>ESTADO</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+
+                <!-- NOMBRE -->
+                <td class="cat-name">
+                    <div class="icon-box">
+                        <i data-lucide="tag"></i>
+                    </div>
+                    {{ categoria.nombre }}
+                </td>
+
+                <td class="cat-desc">
+                    {{ categoria.descripcion|default:"—" }}
+                </td>
+
+                <td class="cat-count">
+                    {{ categoria.producto_set.count }}
+                </td>
+
+                <td>
+                    {{ categoria.fecha_creacion|date:"d/m/Y" }}
+                </td>
+
+                <td>
+                    {% if categoria.estado == 'activo' %}
+                        <span class="status active">Activo</span>
+                    {% else %}
+                        <span class="status inactive">Inactivo</span>
+                    {% endif %}
+                </td>
+
+                <td class="actions">
+
+                    <!-- EDITAR -->
+                    <label for="modal-editar-{{ categoria.id }}" class="btn-edit">
+                        <i data-lucide="edit-2"></i>
+                    </label>
+
+                    <!-- ELIMINAR -->
+                    <label for="modal-eliminar-{{ categoria.id }}" class="btn-delete">
+                        <i data-lucide="trash-2"></i>
+                    </label>
+
+                    <!-- ========== MODAL EDITAR ========== -->
+                    {% include 'modals/categoria/modal_editar_categoria.html'%}
+
+                    <!-- ========== MODAL ELIMINAR ========== -->
+                    {% include 'modals/categoria/modal_eliminar_categoria.html'%}
+                </td>
+
+            </tr>
+            {% empty %}
+
+            <tr>
+                <td colspan="6" class="empty-table">No hay categorías registradas.</td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- ========== MODAL NUEVA CATEGORÍA ========== -->
+
+{% include 'modals/categoria/modal_agregar_categoria.html' %}
+
+<!-- ========== LUCIDE SCRIPT ========== -->
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        lucide.createIcons();
+    });
+</script>
+
+{% endblock %}

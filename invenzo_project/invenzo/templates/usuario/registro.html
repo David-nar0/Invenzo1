@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro – Invenzo</title>
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="registro-container">
+
+    <div class="registro-box">
+        
+        <h2>Crear una cuenta</h2>
+        <p class="subtitulo">Crea tu cuenta y comienza a gestionar tu inventario con facilidad</p>
+        
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="input-icon">
+                <i data-lucide="user"></i>
+                <input type="text" name="nombre" id="nombre" placeholder="Tu nombre completo" required>
+            </div>
+            
+            <div class="input-icon">
+                <i data-lucide="mail"></i>
+                <input type="email" name="{{ form.email.name }}" id="email" placeholder="correo@ejemplo.com" required>
+            </div>
+            
+            <div class="input-icon">
+                <i data-lucide="lock"></i>
+                <input type="password" name="{{ form.contraseña.name }}" id="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            
+            <div class="input-icon">
+                <i data-lucide="lock-keyhole"></i>
+                <input type="password" name="{{ form.confirm.name }}" id="confirm-password" placeholder="Repite la contraseña" required>
+            </div>
+
+            <!-- NUEVO: rol fijo administrador -->
+            <input type="hidden" name="rol" value="administrador">
+            
+            <label class="checkbox">
+                <input type="checkbox" name="terminos" required>
+                Acepto los <a href="#">Términos de Servicio</a> y la <a href="#">Política de Privacidad</a>
+            </label>
+
+            <button type="submit" class="btn-principal">Crear Cuenta</button>
+        </form>
+        
+        <div class="register-footer">
+            ¿Ya tienes una cuenta? <a href="{% url 'invenzo:login' %}">Iniciar sesión</a>
+        </div>
+
+        {% if form.errors %}
+            <ul class="errores">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+
+    <div class="registro-illustration">
+        <img src="{% static 'png/login.png' %}" alt="Ilustración de la imagen">
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>

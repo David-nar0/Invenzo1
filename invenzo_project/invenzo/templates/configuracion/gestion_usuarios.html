@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Gestión de Usuarios{% endblock %}
+{% block header_title %}Usuarios del Sistema{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/configuracion.css' %}">
+
+<div class="perfil-card">
+    <h3><i data-lucide="users"></i> Gestión de Usuarios</h3>
+
+    <table class="tabla-usuarios">
+        <tr>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+        {% for u in usuarios %}
+        <tr>
+            <td>{{u.nombre_usuario}}</td>
+            <td>{{u.rol}}</td>
+            <td><button>Editar</button> <button>Desactivar</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>lucide.createIcons()</script>
+{% endblock %}

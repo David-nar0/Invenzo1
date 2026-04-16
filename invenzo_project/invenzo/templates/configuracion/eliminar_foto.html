@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Foto{% endblock %}
+{% block header_title %}Eliminar Foto de Perfil{% endblock %}
+{% block content %}
+
+<div class="confirm-box">
+    <h3>¿Deseas eliminar tu foto de perfil?</h3>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Eliminar Foto</button>
+        <a href="{% url 'invenzo:configuracion_perfil' %}" class="btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+{% endblock %}

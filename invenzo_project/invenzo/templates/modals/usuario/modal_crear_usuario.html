@@ -1,0 +1,44 @@
+<div class="modal-container">
+    <input type="checkbox" id="modal-crear-usuario" class="modal-toggle">
+    <div class="modal-backdrop">
+        <div class="modal-window-custom">
+            <label for="modal-crear-usuario" class="modal-close-custom">&times;</label>
+            <h2>Nuevo Usuario</h2>
+
+            <form method="POST" enctype="multipart/form-data" action="{% url 'invenzo:crear_usuario' %}">
+                {% csrf_token %}
+
+                <label>Nombre</label>
+                <input type="text" name="nombre" required>
+
+                <label>Correo</label>
+                <input type="email" name="email" required>
+
+                <label>Contraseña</label>
+                <input type="password" name="password" required>
+
+                <label>Confirmar contraseña</label>
+                <input type="password" name="confirm_password" required>
+
+                <label>Rol</label>
+                <select name="rol">
+                    {% if request.user.rol == "administrador" and usuarios|length == 1 %}
+                        <option value="administrador" selected>Administrador</option>
+                        <option value="auxiliar" disabled>No disponible</option>
+                    {% else %}
+                        <option value="administrador">Administrador</option>
+                        <option value="auxiliar">Auxiliar</option>
+                    {% endif %}
+                </select>
+
+                <label>Foto</label>
+                <input type="file" name="foto" accept="image/*">
+
+                <div class="modal-actions-custom">
+                    <label for="modal-crear-usuario" class="modal-btn-secondary">Cancelar</label>
+                    <button type="submit" class="modal-btn-primary">Crear usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

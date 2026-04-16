@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Editar Usuario{% endblock %}
+{% block header_title %}Editar Usuario: {{ usuario.nombre }}{% endblock %}
+{% block content %}
+
+<h2>Modificar Usuario</h2>
+
+<form method="POST" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Nombre</label>
+        {{ form.nombre }}
+    </div>
+    
+    <div class="form-group">
+        <label>Email</label>
+        {{ form.email }}
+    </div>
+    
+    <div class="form-group">
+        <label>Foto</label>
+        {{ form.foto }}
+    </div>
+    
+    {% comment %} 🔥 PROTECCIÓN DEL ÚLTIMO ADMINISTRADOR 🔥 {% endcomment %}
+    {% if usuario.rol == "administrador" and usuario.estado == "activo" and usuarios_admin_activos == 1 %}
+    
+        <div class="alert alert-warning">
+            Este usuario es el <strong>último administrador activo</strong>.  
+            No puedes cambiar su rol ni su estado.
+        </div>
+    
+        <div class="form-group">
+            <label>Rol</label>
+            <select disabled>
+                <option selected>Administrador (bloqueado)</option>
+            </select>
+        </div>
+    
+        <div class="form-group">
+            <label>Estado</label>
+            <select disabled>
+                <option selected>Activo (bloqueado)</option>
+            </select>
+        </div>
+    
+    {% else %}
+        <div class="form-group">
+            <label>Rol</label>
+            {{ form.rol }}
+        </div>
+    
+        <div class="form-group">
+            <label>Estado</label>
+            {{ form.estado }}
+        </div>
+    {% endif %}
+    
+
+    <button type="submit" class="btn-primary">Actualizar</button>
+    <a href="{% url 'invenzo:gestion_usuarios' %}" class="btn-secondary">Volver</a>
+</form>
+
+{% endblock %}

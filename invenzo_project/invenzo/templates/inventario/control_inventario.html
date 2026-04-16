@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Control de Inventario{% endblock %}
+{% block header_title %}Control de Inventario{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/control_inventario.css' %}">
+
+<!-- TÍTULO DE LA PÁGINA -->
+<div class="page-title">
+    <h1>Control de Inventario</h1>
+    <p>Registra entradas y salidas de productos y mantén tu stock al día</p>
+</div>
+
+<!-- MENSAJES -->
+{% if mensaje %}
+<div class="alert success">{{ mensaje }}</div>
+{% endif %}
+{% if error %}
+<div class="alert error">{{ error }}</div>
+{% endif %}
+
+<!-- ============================
+    FORMULARIO DE MOVIMIENTO
+============================ -->
+<div class="card">
+    <h3>Registrar Movimiento</h3>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <!-- Producto -->
+            <div class="form-group">
+                <label>Producto *</label>
+                <select name="producto" required>
+                    <option selected disabled>Selecciona un producto</option>
+                    {% for p in productos %}
+                    <option value="{{ p.id }}">{{ p.nombre }} (Stock: {{ p.cantidad }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tipo de Movimiento -->
+            <div class="form-group">
+                <label>Tipo de Movimiento *</label>
+                <select name="tipo_movimiento" required>
+                    <option value="entrada">Entrada</option>
+                    <option value="salida">Salida</option>
+                </select>
+            </div>
+
+            <!-- Cantidad -->
+            <div class="form-group">
+                <label>Cantidad *</label>
+                <input type="number" min="1" name="cantidad" required>
+            </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="form-group full">
+            <label>Observaciones</label>
+            <textarea name="observacion" rows="2" placeholder="Detalles sobre este movimiento"></textarea>
+        </div>
+
+        <!-- Botón Registrar -->
+        <button class="btn-submit">
+            <i data-lucide="save"></i> Registrar Movimiento
+        </button>
+
+    </form>
+</div>
+
+<!-- ============================
+    MOVIMIENTOS RECIENTES
+============================ -->
+<div class="card">
+    <div class="card-title-row">
+        <h3>Movimientos Recientes</h3>
+        <a href="{% url 'invenzo:historial' %}" class="see-more">Ver Historial Completo</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>PRODUCTO</th>
+                <th>TIPO</th>
+                <th>CANTIDAD</th>
+                <th>FECHA</th>
+                <th>USUARIO</th>
+                <th>NOTAS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.producto.nombre }}</td>
+                <td>
+                    {% if m.tipo_movimiento == "entrada" %}
+                        <span class="badge in">Entrada</span>
+                    {% else %}
+                        <span class="badge out">Salida</span>
+                    {% endif %}
+                </td>
+                <td>{{ m.cantidad }}</td>
+                <td>{{ m.fecha_movimiento|date:"Y-m-d H:i" }}</td>
+                <td>{{ m.usuario.nombre }}</td>
+                <td>{{ m.observacion|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">No hay movimientos recientes.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- ============================
+    RESUMEN DE STOCK
+============================ -->
+<div class="card">
+    <h3>Resumen de Stock</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>PRODUCTO</th>
+                <th>CÓDIGO</th>
+                <th>CATEGORÍA</th>
+                <th>STOCK ACTUAL</th>
+                <th>ESTADO</th>  <!-- 🔹 NUEVO NOMBRE -->
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.codigo }}</td>
+                <td>{{ p.categoria.nombre }}</td>
+
+                <!-- STOCK ACTUAL -->
+                <td>{{ p.cantidad }}</td>
+
+                <!-- ESTADO DE STOCK -->
+                <td>
+                    {% if p.cantidad == 0 %}
+                        <span class="badge danger">Sin Stock</span>
+                    {% elif p.cantidad <= p.stock_minimo %}
+                        <span class="badge warning">Stock Bajo</span>
+                    {% else %}
+                        <span class="badge ok">Disponible</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center; padding:20px;">
+                    No hay productos registrados.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        lucide.createIcons();
+    });
+</script>
+
+{% endblock %}

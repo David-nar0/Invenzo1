@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Configuración{% endblock %}
+{% block header_title %}Configuración{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/configuracion.css' %}">
+
+<div class="page-title">
+    <h1>Configuración</h1>
+    <p>Administra tu perfil, el sistema y notificaciones según tu rol</p>
+</div>
+
+<div class="config-container">
+
+    <!-- PERFIL -->
+    <div class="config-card">
+        <i data-lucide="user-cog"></i>
+        <h3>Perfil</h3>
+        <p>Actualiza tus datos personales o cambia tu contraseña</p>
+        <a href="{% url 'invenzo:configuracion_perfil' %}" class="btn-primary">Editar Perfil</a>
+    </div>
+
+    <!-- NOTIFICACIONES -->
+    <div class="config-card">
+        <i data-lucide="bell"></i>
+        <h3>Notificaciones</h3>
+        <p>Controla alertas del sistema y stock bajo</p>
+        <a href="{% url 'invenzo:configuracion_notificaciones' %}" class="btn-secondary">Administrar</a>
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();  // Render de iconos Lucide
+</script>
+
+{% endblock %}

@@ -1,0 +1,242 @@
+/* ===============================
+   RESET Y VARIABLES (Asegura consistencia)
+================================= */
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: 'Inter', sans-serif;
+}
+
+:root {
+   /* Colores basados en la paleta de la imagen */
+   --primary-blue: #007BFF;
+   --primary-hover: #0056CC;
+   --background-right: #0A5FC5; /* El azul para la ilustración derecha */
+   --input-border: #D1D5DB; /* Borde gris sutil para campos de Registro */
+   --text-dark: #1F2937;
+   --text-muted: #6B7280;
+   --error-color: #EF4444;
+}
+
+/* ===============================
+  BODY Y CONTENEDOR PRINCIPAL
+================================= */
+body {
+   display: flex;
+   min-height: 100vh;
+   margin: 0;
+   background-color: #f4f4f4;
+   align-items: center;
+   justify-content: center;
+}
+
+.registro-container {
+   display: flex;
+   width: 100vw; 
+   height: 100vh; 
+}
+
+/* ===============================
+  PANEL IZQUIERDO: FORMULARIO DE REGISTRO
+================================= */
+.registro-box {
+   flex: 1;
+   background-color: #FFFFFF;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   padding: 2rem;
+}
+
+.registro-box > * {
+   width: 100%;
+   max-width: 380px; /* Ajuste para el ancho exacto del formulario en la imagen */
+}
+
+/* Logo/Icono Invenzo */
+.logo-invenzo {
+    width: 40px; /* Ajuste el tamaño de tu logo si está como imagen */
+    margin-bottom: 0.5rem;
+}
+
+.registro-box h1 {
+    /* El logo de Invenzo es un SVG o imagen en el diseño, no un H1 de texto */
+    display: none; 
+}
+
+/* Títulos y Subtítulos */
+.registro-box h2 {
+   font-size: 1.5rem; /* "Crear una cuenta" */
+   font-weight: 700;
+   color: var(--text-dark);
+   margin-bottom: 0.25rem;
+   text-align: center;
+}
+
+.registro-box .subtitulo {
+   font-size: 0.9rem;
+   color: var(--text-muted);
+   margin-bottom: 2rem;
+   text-align: center;
+}
+
+/* ===============================
+  FORMULARIO DE REGISTRO
+================================= */
+form {
+   display: flex;
+   flex-direction: column;
+   /* Eliminamos el gap: 1rem, ya que los inputs van juntos con los títulos */
+   text-align: left;
+}
+
+/* Etiquetas (Nombre Completo, Correo, etc.) */
+.registro-box label {
+   font-size: 0.8rem; /* Tamaño más pequeño */
+   font-weight: 600;
+   color: var(--text-dark);
+   margin-top: 1rem;
+   margin-bottom: 0.25rem;
+   display: block;
+}
+
+/* Inputs y Select (REGISTRO: Fondo Blanco, Borde Gris Fino) */
+.input-icon {
+   position: relative;
+   /* No hay margin-bottom aquí, el espacio lo da el input */
+}
+
+.input-icon i {
+   position: absolute;
+   top: 50%;
+   left: 12px;
+   transform: translateY(-50%);
+   color: var(--text-muted);
+   width: 16px;
+   height: 16px;
+   /* Ajustar los iconos al tamaño de Lucide */
+}
+
+.input-icon input,
+.input-icon select {
+   width: 100%;
+   padding: 10px 12px 10px 40px; /* Padding para el icono */
+   border: 1px solid var(--input-border); /* Borde gris visible */
+   border-radius: 6px; /* Esquinas ligeramente redondeadas */
+   background-color: #fff; /* Fondo blanco liso */
+   font-size: 0.95rem;
+   color: var(--text-dark);
+   transition: border-color 0.2s;
+}
+
+.input-icon input:focus,
+.input-icon select:focus {
+   outline: none;
+   border-color: var(--primary-blue);
+}
+
+.input-icon input::placeholder {
+   color: var(--text-muted);
+   font-size: 0.9rem;
+}
+
+/* Select Styling (para el campo de Rol) */
+.input-icon select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%236B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    color: var(--text-muted);
+}
+.input-icon select:valid {
+    color: var(--text-dark);
+}
+
+/* Checkbox de Términos (La imagen lo muestra más compacto) */
+.checkbox {
+    display: flex;
+    align-items: flex-start; /* Alinear el texto de arriba */
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 8px;
+    margin-top: 2px; /* Alineación visual con el texto */
+}
+
+.checkbox a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+.checkbox a:hover {
+    text-decoration: underline;
+}
+
+/* Botón Principal "Crear Cuenta" */
+.btn-principal {
+   width: 100%;
+   padding: 12px;
+   background-color: var(--primary-blue);
+   color: #fff;
+   font-weight: 600;
+   font-size: 1rem;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: background-color 0.2s;
+}
+
+.btn-principal:hover {
+   background-color: var(--primary-hover);
+}
+
+/* --- Enlace de Iniciar Sesión (Pie de Página del Registro) --- */
+.register-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-top: 1.5rem; /* Espacio después del botón */
+}
+
+.register-footer a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Menajes de Error de Django */
+.errores {
+   color: var(--error-color);
+   font-size: 0.8rem;
+   list-style-type: none;
+   padding: 0;
+   margin-top: 1rem;
+   text-align: center;
+}
+
+/* --- Panel Derecho: Ilustración (Fondo Azul) --- */
+/* NOTA: Este DIV debe estar en tu HTML: <div class="registro-illustration"></div> */
+.registro-illustration {
+    flex: 1;
+    background-color: var(--background-right); /* El azul oscuro del panel de la derecha */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    /* Aquí se aplica la imagen/SVG de la ilustración con los engranajes/persona */
+    /* background-image: url("{% static 'img/registro-illustration.png' %}");
+    background-size: cover;
+    background-position: center; */
+}

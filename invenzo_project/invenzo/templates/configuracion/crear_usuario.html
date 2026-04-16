@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Crear Usuario{% endblock %}
+{% block header_title %}Nuevo Usuario{% endblock %}
+{% block content %}
+
+<h2>Registrar Nuevo Usuario</h2>
+
+<form method="POST" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn-primary">Guardar</button>
+    <a href="{% url 'invenzo:gestion_usuarios' %}" class="btn-secondary">Cancelar</a>
+</form>
+
+{% endblock %}

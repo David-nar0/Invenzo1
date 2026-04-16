@@ -1,0 +1,33 @@
+{% for u in usuarios %}
+<div class="modal-container">
+    <input type="checkbox" id="modal-reset-{{ u.id }}" class="modal-toggle">
+
+    <div class="modal-backdrop">
+        <div class="modal-window-custom modal-small-custom">
+
+            <label for="modal-reset-{{ u.id }}" class="modal-close-custom"></label>
+
+            <h2>Restablecer contraseña</h2>
+
+            <form method="POST" action="{% url 'invenzo:reset_password' u.id %}">
+                {% csrf_token %}
+
+                <div class="form-group-custom">
+                    <label>Nueva contraseña</label>
+                    <input type="password" name="password" required>
+                </div>
+
+                <div class="modal-actions-custom">
+                    <label for="modal-reset-{{ u.id }}" class="modal-btn-secondary">
+                        Cancelar
+                    </label>
+                    <button type="submit" class="modal-btn-primary">
+                        Restablecer
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endfor %}

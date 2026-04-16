@@ -4,6 +4,9 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Entorno virtual
+venv/
+
 # Django
 db.sqlite3
 media/

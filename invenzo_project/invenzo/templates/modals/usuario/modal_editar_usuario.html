@@ -1,0 +1,42 @@
+{% for u in usuarios %}
+<div class="modal-container">
+    <input type="checkbox" id="modal-editar-{{ u.id }}" class="modal-toggle">
+    <div class="modal-backdrop">
+        <div class="modal-window-custom">
+            <label for="modal-editar-{{ u.id }}" class="modal-close-custom"></label>
+            <h2>Editar Usuario</h2>
+
+            <form method="POST" enctype="multipart/form-data" action="{% url 'invenzo:editar_usuario' u.id %}">
+                {% csrf_token %}
+
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="{{ u.nombre }}" required>
+
+                <label>Correo</label>
+                <input type="email" name="email" value="{{ u.email }}" required>
+
+                <label>Rol</label>
+                <select name="rol">
+                    <option value="administrador" {% if u.rol == 'administrador' %}selected{% endif %}>Administrador</option>
+                    <option value="auxiliar" {% if u.rol == 'auxiliar' %}selected{% endif %}>Auxiliar</option>
+                </select>
+
+                <label>Foto</label>
+                <input type="file" name="foto" accept="image/*">
+
+                <label>Estado</label>
+                <select name="estado">
+                    <option value="activo" {% if u.estado == 'activo' %}selected{% endif %}>Activo</option>
+                    <option value="inactivo" {% if u.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+                </select>
+
+                <div class="modal-actions-custom">
+                    <label for="modal-editar-{{ u.id }}" class="modal-btn-secondary">Cancelar</label>
+                    <button type="submit" class="modal-btn-primary">Guardar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endfor %}

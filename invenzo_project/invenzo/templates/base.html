@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">  <!-- Modal siempre disponible -->
+    <title>{% block title %}Invenzo{% endblock %}</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="base-sidebar base-active">
+
+        <div class="base-close-sidebar">
+            <i data-lucide="x"></i>
+        </div>
+
+        <div class="base-menu-title">MENÚ PRINCIPAL</div>
+
+        <a href="{% url 'invenzo:dashboard' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'dashboard' %}base-active{% endif %}">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+        </a>
+
+        <a href="{% url 'invenzo:productos_disponibles' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'productos_disponibles' %}base-active{% endif %}">
+            <i data-lucide="package"></i> Productos
+        </a>
+
+        <a href="{% url 'invenzo:control_inventario' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'control_inventario' %}base-active{% endif %}">
+            <i data-lucide="replace"></i> Control de Inventario
+        </a>
+
+        <a href="{% url 'invenzo:categorias' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'categorias' %}base-active{% endif %}">
+            <i data-lucide="tags"></i> Categorías
+        </a>
+
+        <a href="{% url 'invenzo:historial' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'historial' %}base-active{% endif %}">
+            <i data-lucide="history"></i> Historial
+        </a>
+
+        <a href="{% url 'invenzo:alerta_stock' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'alerta_stock' %}base-active{% endif %}">
+            <i data-lucide="alert-triangle"></i> Alertas de Stock
+        </a>
+
+        <a href="{% url 'invenzo:usuarios' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'usuarios' %}base-active{% endif %}">
+            <i data-lucide="users"></i> Usuarios
+        </a>
+
+        <a href="{% url 'invenzo:configuracion' %}"
+            class="base-menu-item {% if request.resolver_match.url_name == 'configuracion' %}base-active{% endif %}">
+            <i data-lucide="settings"></i> Configuración
+        </a>
+
+        <div class="base-menu-section">
+            <div class="base-menu-title" style="margin-top: 30px;">CUENTA</div>
+            <a href="{% url 'invenzo:cerrar_sesion' %}" class="base-menu-item base-logout-btn">
+                <i data-lucide="log-out"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <div class="base-main-content">
+
+        <!-- ========== TOPBAR ========== -->
+        <header class="base-topbar">
+            <div class="base-topbar-left">
+                <i data-lucide="skip-forward" class="base-menu-toggle"></i>
+
+                <div class="base-brand">
+                    <i data-lucide="box" class="base-brand-icon"></i>
+                    <h2>Invenzo</h2>
+                </div>
+            </div>
+
+            <div class="base-topbar-right">
+                
+                <!-- Notificaciones -->
+                
+                <div class="base-notifications-wrapper" data-url="{% url 'invenzo:obtener_notificaciones' %}">
+                    <i data-lucide="bell" class="base-bell-icon"></i>
+                    <div class="base-notifications-dropdown">
+                        <p>Notificaciones</p>
+                        <hr>
+                        <div class="base-notifications-list">
+                            <p>No hay notificaciones</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Usuario -->
+                <div class="base-user-info" style="cursor:pointer;" data-url="{% url 'invenzo:configuracion_perfil' %}">
+                    {% if request.session.usuario_foto %}
+                        <img src="{{ request.session.usuario_foto }}" class="base-user-avatar">
+                    {% else %}
+                        <i data-lucide="user-circle" style="width: 32px; height: 32px;"></i>
+                    {% endif %}
+                    <span>{{ request.session.usuario_nombre|default:"Usuario" }}</span>
+                </div>
+            </div>
+        </header>
+
+                <!-- ========== CONTENIDO QUE CAMBIA ========== -->
+                <div class="base-container">
+
+                    <!-- ========== MENSAJES DEL SISTEMA ========== -->
+                    <!-- ========== MENSAJES FLASH (FLOATING CENTER) ========== -->
+                    {% if messages %}
+                    <div class="flash-container">
+                        {% for message in messages %}
+                            <div class="flash-message {{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <script>
+                        // Desaparecen automáticamente después de 3 segundos
+                        setTimeout(() => {
+                            document.querySelectorAll('.flash-message').forEach(el => {
+                                el.style.opacity = '0';
+                                setTimeout(() => el.remove(), 500);
+                            });
+                        }, 3000);
+                    </script>
+                    {% endif %}
+
+                    <!-- ========== FIN MENSAJES ========== -->
+        
+                    {% block content %}{% endblock %}
+                </div>
+        
+
+    </div>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

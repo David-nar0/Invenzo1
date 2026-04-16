@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestión de Productos{% endblock %}
+{% block header_title %}Gestión de Productos{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/gestor_productos.css' %}">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<section class="header-section">
+    <div class="header-text">
+        <h1>Gestión de Productos</h1>
+        <p>Administra tu catálogo de productos</p>
+    </div>
+
+    <!-- BOTÓN CON NUEVO ESTILO -->
+    <label for="modal-agregar-producto" class="btn-primary">
+        <i data-lucide="plus"></i> Nuevo Producto
+    </label>
+</section>
+
+
+<section class="filters-section">
+    <form method="GET" action="">
+        <div class="search-input">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Buscar productos..." name="search" value="{{ request.GET.search|default:'' }}">
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit" class="btn-secondary">
+                <i class="fas fa-filter"></i> Filtrar
+            </button>
+
+            <a href="{% url 'invenzo:exportar_productos' %}" class="btn-secondary export-btn">
+                <i class="fas fa-file-export"></i> Exportar
+            </a>
+        </div>
+    </form>
+</section>
+
+<section class="status-tabs">
+    <a href="{% url 'invenzo:productos_disponibles' %}" 
+        class="tab {% if request.GET.status == 'all' or not request.GET.status %}active{% endif %}">
+        <i data-lucide="layers"></i>
+        Todos <span class="badge">{{ productos_all_count }}</span>
+    </a>
+
+    <a href="?status=low{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+        class="tab warning {% if request.GET.status == 'low' %}active{% endif %}">
+        <i data-lucide="alert-triangle"></i>
+        Stock Bajo <span class="badge">{{ productos_bajo_count }}</span>
+    </a>
+
+    <a href="?status=out{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" 
+        class="tab danger {% if request.GET.status == 'out' %}active{% endif %}">
+        <i data-lucide="circle-x"></i>
+        Sin Stock <span class="badge">{{ productos_sin_count }}</span>
+    </a>
+</section>
+
+
+<!-- ==============================
+     TABLA PRINCIPAL: PRODUCTOS ACTIVOS
+=============================== -->
+<section class="products-table">
+    <table>
+        <thead>
+            <tr>
+                <th>PRODUCTO</th>
+                <th>CÓDIGO</th>
+                <th>CATEGORÍA</th>
+                <th>PRECIO</th>
+                <th>STOCK</th>
+                <th>ESTADO</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for producto in productos %}
+
+            {% if producto.cantidad == 0 %}
+                <tr class="out-of-stock-row">
+            {% elif producto.cantidad <= producto.stock_minimo %}
+                <tr class="low-stock-row">
+            {% else %}
+                <tr class="in-stock-row">
+            {% endif %}
+
+                <td class="product-cell">
+                    {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    {% else %}
+                        <div class="product-placeholder">
+                            {{ producto.nombre|slice:":1" }}
+                        </div>
+                    {% endif %}
+                    <span>{{ producto.nombre }}</span>
+                </td>
+
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio|floatformat:2 }}</td>
+
+                <td>
+                    {{ producto.cantidad }}
+                    {% if producto.cantidad <= producto.stock_minimo %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if producto.cantidad == 0 %}
+                        <span class="status-tag out-of-stock">Sin Stock</span>
+                    {% elif producto.cantidad <= producto.stock_minimo %}
+                        <span class="status-tag low-stock">Stock Bajo</span>
+                    {% else %}
+                        <span class="status-tag in-stock">En Stock</span>
+                    {% endif %}
+                </td>
+
+                <td class="actions-cell">
+
+                    <!-- EDITAR -->
+                    <label for="modal-editar-producto-{{ producto.id }}" class="action-icon edit-icon">
+                        <i data-lucide="square-pen"></i>
+                    </label>                    
+
+
+                    <!-- ELIMINAR -->
+                    <label for="modal-eliminar-{{ producto.id }}" class="action-icon delete-icon">
+                        <i data-lucide="x"></i>
+                    </label>
+
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 20px;">
+                    No se encontraron productos en el catálogo.
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</section>
+
+{% for producto in productos %}
+    {% include 'modals/producto/modal_editar_producto.html' %}
+    {% include 'modals/producto/modal_eliminar_producto.html' %}
+{% endfor %}
+
+
+<section class="pagination">
+    {% if page_obj %}
+        <span>
+            Mostrando {{ page_obj.start_index }} a {{ page_obj.end_index }} de {{ page_obj.paginator.count }} productos
+        </span>
+        <div class="pages">
+            {% for i in page_obj.paginator.page_range %}
+                <a class="page-number {% if page_obj.number == i %}active{% endif %}"
+                href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                    {{ i }}
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <span>Mostrando {{ productos.count }} productos</span>
+    {% endif %}
+</section>
+
+<!-- ==============================
+    TABLA SECUNDARIA: PRODUCTOS INACTIVOS
+=============================== -->
+<section class="products-table inactive-products">
+    <h2>Productos Inactivos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>PRODUCTO</th>
+                <th>CÓDIGO</th>
+                <th>CATEGORÍA</th>
+                <th>PRECIO</th>
+                <th>STOCK</th>
+                <th>ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos_inactivos %}
+            <tr class="inactive-row">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio|floatformat:2 }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>
+                    <a href="{% url 'invenzo:activar_producto' producto.id %}" class="btn btn-primary">
+                        Activar
+                    </a>
+
+                    <a href="{% url 'invenzo:eliminar_definitivo' producto.id %}"
+                        class="btn btn-secondary"
+                        onclick="return confirm('¿Eliminar DEFINITIVAMENTE este producto? Esta acción no se puede deshacer.')">
+                        Eliminar
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">No hay productos inactivos.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+<!-- MODAL AGREGAR PRODUCTO -->
+{% include 'modals/producto/modal_agregar_producto.html' %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        lucide.createIcons();
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+<div class="modal-container">
+    <input type="checkbox" id="modal-editar-producto-{{ producto.id }}" class="modal-toggle">
+
+    <div class="modal-backdrop">
+        <div class="modal-window-custom modal-form-custom">
+
+            <label for="modal-editar-producto-{{ producto.id }}" class="modal-close-custom">✕</label>
+
+            <h2 class="modal-title-custom">Editar Producto</h2>
+
+            <form method="POST" action="{% url 'invenzo:editar_producto' producto.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="modal-grid-custom">
+
+                    <!-- CAMPOS -->
+                    <div class="field-group-custom">
+                        <label for="nombre-{{ producto.id }}">Nombre</label>
+                        <input id="nombre-{{ producto.id }}" type="text" name="nombre"
+                               value="{{ producto.nombre }}" required>
+                    </div>
+
+                    <div class="field-group-custom">
+                        <label>Código</label>
+                        <input type="text" name="codigo" value="{{ producto.codigo }}" required>
+                    </div>
+
+                    <div class="field-group-custom">
+                        <label>Categoría</label>
+                        <select name="categoria">
+                            {% for c in categorias %}
+                            <option value="{{ c.id }}" {% if producto.categoria.id == c.id %}selected{% endif %}>
+                                {{ c.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field-group-custom">
+                        <label>Precio</label>
+                        <input type="number" name="precio" step="0.01"
+                               value="{{ producto.precio }}" required>
+                    </div>
+
+                    <div class="field-group-custom">
+                        <label>Stock mínimo</label>
+                        <input type="number" name="stock_minimo"
+                               value="{{ producto.stock_minimo }}" required>
+                    </div>
+
+                    <div class="field-group-custom">
+                        <label>Stock máximo</label>
+                        <input type="number" name="stock_maximo"
+                               value="{{ producto.stock_maximo }}" required>
+                    </div>
+
+                    <div class="field-group-custom full-custom">
+                        <label>Descripción</label>
+                        <textarea name="descripcion">{{ producto.descripcion }}</textarea>
+                    </div>
+
+                    <!-- BLOQUE IMAGEN -->
+<div class="field-group-custom full-custom image-box">
+
+    <label class="image-title">Imagen del producto</label>
+
+    {% if producto.imagen %}
+    <img id="imagen-actual-{{ producto.id }}"
+         src="{{ producto.imagen.url }}"
+         class="image-mini">  <!-- cerrar la etiqueta correctamente -->
+
+    <label class="delete-image-btn">
+        <input type="checkbox" name="eliminar_imagen" class="delete-image-checkbox">
+        Eliminar imagen
+    </label>
+    {% else %}
+    <p class="no-image">No hay imagen</p>
+    {% endif %}
+
+    <!-- INPUT FILE (NECESARIO) -->
+    <input type="file" name="imagen" id="imagen-{{ producto.id }}" accept="image/*" hidden>
+    <label for="imagen-{{ producto.id }}" class="upload-image-btn">
+        Subir nueva imagen
+    </label>
+
+    <!-- PREVIEW -->
+    <div id="preview-imagen-{{ producto.id }}" class="image-preview-custom" style="display:none">
+        <img id="img-preview-{{ producto.id }}">
+    </div>
+
+</div>
+
+
+                </div>
+
+                <!-- BOTONES -->
+                <div class="modal-actions-custom">
+                    <label for="modal-editar-producto-{{ producto.id }}"
+                           class="modal-btn-secondary">Cancelar</label>
+                    <button type="submit" class="modal-btn-primary">Guardar cambios</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+    const inputImagen = document.getElementById("imagen-{{ producto.id }}");
+    const checkboxEliminar = document.querySelector(
+        'input[name="eliminar_imagen"]'
+    );
+
+    if (inputImagen) {
+        inputImagen.addEventListener("change", function (event) {
+            let file = event.target.files[0];
+
+            if (file) {
+                document.getElementById("preview-imagen-{{ producto.id }}").style.display = "block";
+                document.getElementById("img-preview-{{ producto.id }}").src = URL.createObjectURL(file);
+
+                let actual = document.getElementById("imagen-actual-{{ producto.id }}");
+                if (actual) actual.style.display = "none";
+            }
+        });
+    }
+
+    if (checkboxEliminar) {
+        checkboxEliminar.addEventListener("change", function () {
+            let actual = document.getElementById("imagen-actual-{{ producto.id }}");
+            if (actual) {
+                actual.style.display = this.checked ? "none" : "block";
+            }
+        });
+    }
+</script>

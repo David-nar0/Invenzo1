@@ -1,0 +1,359 @@
+:root {
+    --base-primary: #0077B6;
+    --base-text-primary: #1F2937;
+    --base-text-muted: #6B7280;
+    --base-bg-light: #F9FAFB;
+    --base-border-color: #E5E7EB;
+    --base-menu-active-bg: #E0F2FE;
+    --base-card-bg: #FFFFFF;
+    --base-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
+/* Reset/Body */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, Arial, sans-serif;
+    background: var(--base-bg-light);
+    color: var(--base-text-primary);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar toggle icon (mobile) */
+.base-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.base-menu-toggle svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Close icon inside sidebar (mobile) */
+.base-close-sidebar {
+    display: none;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.base-close-sidebar svg {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+/* Sidebar fijo */
+.base-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    padding: 24px 20px;
+    border-right: 1px solid var(--base-border-color);
+    background: var(--base-card-bg);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.base-sidebar .base-menu-section:last-child {
+    margin-top: auto;
+}
+
+.base-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.base-brand-icon {
+    width: 30px;
+    height: 30px;
+    stroke: var(--base-primary) !important;
+    stroke-width: 3 !important;
+}
+
+.base-menu-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--base-text-muted);
+    letter-spacing: 0.05em;
+    margin: 20px 0 12px;
+    padding: 0 12px;
+}
+
+.base-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--base-text-primary);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    transition: background-color .12s;
+}
+
+.base-menu-item svg {
+    width: 20px;
+    height: 20px;
+    color: var(--base-text-muted);
+}
+
+.base-menu-item:hover {
+    background: var(--base-menu-active-bg);
+}
+
+.base-menu-item.base-active {
+    background: var(--base-menu-active-bg);
+    color: var(--base-primary);
+    font-weight: 600;
+}
+
+.base-menu-item.base-active svg {
+    color: var(--base-primary);
+}
+
+/* Contenido principal */
+.base-main-content {
+    margin-left: 260px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    transition: margin-left .25s ease;
+}
+
+/* Header fijo */
+.base-topbar {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    height: 60px;
+    background: var(--base-card-bg);
+    border-bottom: 1px solid var(--base-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1001;
+}
+
+.base-topbar-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.base-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.base-user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.base-user-info {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+/* Padding para que el contenido no quede debajo del header */
+.base-main-content .base-container {
+    padding-top: 60px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* logout */
+.base-logout-btn {
+    color: #DC2626;
+    font-weight: 600;
+}
+
+.base-logout-btn svg {
+    color: #DC2626;
+}
+
+.base-logout-btn:hover {
+    background: #FEE2E2;
+}
+
+/* Desktop behavior */
+@media (min-width: 851px) {
+    .base-menu-toggle,
+    .base-close-sidebar {
+        display: none !important;
+    }
+}
+
+/* Mobile behavior */
+@media (max-width: 850px) {
+    .base-sidebar {
+        left: -260px;
+        top: 0;
+        position: fixed;
+        z-index: 999;
+    }
+
+    .base-sidebar.base-active {
+        left: 0;
+    }
+
+    .base-main-content {
+        margin-left: 0 !important;
+    }
+
+    .base-menu-toggle {
+        display: block;
+    }
+
+    .base-close-sidebar {
+        display: block;
+    }
+
+    .base-topbar {
+        left: 0;
+    }
+}
+
+
+
+
+
+
+
+
+/* Wrapper del icono de notificaciones */
+.base-notifications-wrapper {
+    position: relative; /* necesario para el dropdown absoluto */
+    display: inline-block; /* que no tome todo el ancho */
+}
+
+/* Icono de campana */
+.base-bell-icon {
+    cursor: pointer;
+}
+
+/* Dropdown de notificaciones */
+.base-notifications-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 36px;
+    width: 300px;
+    background: var(--base-card-bg);
+    border: 1px solid var(--base-border-color);
+    border-radius: 8px;
+    box-shadow: var(--base-shadow);
+    max-height: 350px;
+    overflow-y: auto;
+    z-index: 1001;
+    padding: 10px;
+    transition: all 0.3s ease; /* animación al abrir/cerrar */
+}
+
+/* Título del dropdown */
+.base-notifications-dropdown > p:first-child {
+    margin: 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Lista de notificaciones */
+.base-notifications-list p {
+    margin: 4px 0;
+    text-align: left;
+    color: gray;
+}
+
+/* Estilo individual de cada notificación */
+.notificacion-item {
+    background-color: #f0f4f8;
+    padding: 6px 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+    font-size: 14px;
+    border-left: 4px solid #0077B6; /* default */
+    cursor: default;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.notificacion-item:hover {
+    background-color: #e0e8f0;
+    transform: translateX(2px);
+}
+
+/* Colores por tipo de notificación */
+.notificacion-critica {
+    border-left-color: #DC2626;
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.notificacion-baja {
+    border-left-color: #F59E0B;
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.notificacion-nueva {
+    border-left-color: #3B82F6;
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+
+
+/* ----- FLASH MESSAGES CENTRADOS ----- */
+.flash-container {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: auto;
+    max-width: 80%;
+}
+
+.flash-message {
+    padding: 15px 25px;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* Colores según el tipo de mensaje */
+.flash-message.error { background: #e63946; }
+.flash-message.success { background: #38b000; }
+.flash-message.warning { background: #ffba08; color: black; }
+.flash-message.info { background: #0077b6; }

@@ -1,0 +1,28 @@
+<div class="modal-container">
+    <input type="checkbox" id="modal-eliminar-{{ categoria.id }}" class="modal-toggle">
+
+    <div class="modal-backdrop">
+        <div class="modal-window-custom modal-small-custom">
+
+            <label for="modal-eliminar-{{ categoria.id }}" class="modal-close-custom">&times;</label>
+
+            <h2>Eliminar Categoría</h2>
+            <p>¿Deseas eliminar la categoría <b>{{ categoria.nombre }}</b>?</p>
+
+            <form method="POST" action="{% url 'invenzo:eliminar_categoria' categoria.id %}">
+                {% csrf_token %}
+
+                <div class="modal-actions-custom">
+                    <label for="modal-eliminar-{{ categoria.id }}" class="modal-btn-secondary">
+                        Cancelar
+                    </label>
+                    <button type="submit" class="modal-btn-danger">
+                        Eliminar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
