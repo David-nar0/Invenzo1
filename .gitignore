@@ -1,5 +1,16 @@
-venv/
-
-db.sqlite3
-
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+db.sqlite3
+media/
+*.log
+
+# Configuración de entorno
+.env
+
+# Sistema operativo
+.DS_Store
